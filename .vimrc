@@ -84,8 +84,13 @@ set autoindent
 filetype indent on
 set sw=4
 
-"" Remove trailing spaces when writing to source files
-autocmd BufWritePre <buffer> :%s/\s\+$//e
+"" Remove trailing spaces when writing to source files,
+"" but not when editing hunks or diff (doing so often skrews the patch).
+augroup TrailingSpaces
+    autocmd!
+    autocmd BufWritePre <buffer> :%s/\s\+$//e
+augroup END
+autocmd FileType diff autocmd! TrailingSpaces
 
 "" Special for python
 autocmd BufRead *py set shiftwidth=4
